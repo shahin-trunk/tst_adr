@@ -277,7 +277,8 @@ class VLLMClientSyntheticGenerator:
             gpu_before_decode = torch.cuda.memory_allocated(0) / 1024**3
             logger.debug(f"GPU memory before decode: {gpu_before_decode:.2f}GB")
         
-        codes_tensor = torch.tensor(codes).unsqueeze(0).to(self.codec_device)
+        # Codec expects shape [batch, 1, sequence_length]
+        codes_tensor = torch.tensor(codes).unsqueeze(0).unsqueeze(0).to(self.codec_device)
         logger.debug(f"Codes tensor shape: {codes_tensor.shape}, device: {codes_tensor.device}")
         
         with torch.no_grad():
